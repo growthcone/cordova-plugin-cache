@@ -41,6 +41,23 @@
 	[self success:@"NSURLCache"];
 }
 
+- (void)clearwebcache:(CDVInvokedUrlCommand *)command
+{
+	NSLog(@"Cordova Cache Plugin method clearwebcache() called.");
+
+	_callbackId = command.callbackId;
+
+	// Plugin arguments are not used at the moment.
+	// NSArray* arguments = command.arguments;
+
+	[self.commandDelegate runInBackground:^{
+	  // clear cache
+	  [[NSURLCache sharedURLCache] removeAllCachedResponses];
+	}];
+
+	[self success:@"NSURLCache"];
+}
+
 - (void)cleartemp:(CDVInvokedUrlCommand *)command
 {
 	NSLog(@"Cordova Cache Plugin method cleartemp() called.");

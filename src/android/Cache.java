@@ -80,6 +80,35 @@ public class Cache extends CordovaPlugin {
 			});
 			return true;
 		}
+
+		if ( action.equals("clearwebcache") ) {
+			Log.v(LOG_TAG, "Cordova Android Cache.clearwebcache() called.");
+			this.callbackContext = callbackContext;
+
+			final Cache self = this;
+			cordova.getActivity().runOnUiThread( new Runnable() {
+				public void run() {
+					try {
+						// clear the cache
+						self.webView.clearCache(true);
+
+						// send success result to cordova
+						PluginResult result = new PluginResult(PluginResult.Status.OK);
+						result.setKeepCallback(false);
+						self.callbackContext.sendPluginResult(result);
+					} catch ( Exception e ) {
+						String msg = "Error while clearing webview cache.";
+						Log.e(LOG_TAG, msg );
+
+						// return error answer to cordova
+						PluginResult result = new PluginResult(PluginResult.Status.ERROR, msg);
+						result.setKeepCallback(false);
+						self.callbackContext.sendPluginResult(result);
+					}
+				}
+			});
+			return true;
+		}		
 		return false;
 		/*
 		}

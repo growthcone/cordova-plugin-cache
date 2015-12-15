@@ -31,6 +31,9 @@ var Cache = {
   clear: function(success, error) {
     exec(success, error, "Cache", "clear", [])
   },
+  clearwebcache: function(success, error) {
+    exec(success, error, "Cache", "clearwebcache", [])
+  },
   cleartemp: function(success, error) {
     exec(success, error, "Cache", "cleartemp", [])
   }
