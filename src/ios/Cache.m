@@ -36,6 +36,11 @@
 	[self.commandDelegate runInBackground:^{
 	  // clear cache
 	  [[NSURLCache sharedURLCache] removeAllCachedResponses];
+        
+        //clear cookies
+        for(NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+        }
 	}];
 
 	[self success:@"NSURLCache"];
@@ -53,6 +58,12 @@
 	[self.commandDelegate runInBackground:^{
 	  // clear cache
 	  [[NSURLCache sharedURLCache] removeAllCachedResponses];
+
+        //clear cookies
+        for(NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+        }
+        
 	}];
 
 	[self success:@"NSURLCache"];
