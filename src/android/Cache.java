@@ -29,10 +29,11 @@ import org.json.JSONException;
 import java.io.File;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
+import android.os.Build;
 import android.util.Log;
+import android.webkit.CookieManager;
 
-@TargetApi(19)
+@TargetApi(16)
 public class Cache extends CordovaPlugin {
 	private static final String LOG_TAG = "Cache";
 	private CallbackContext callbackContext;
@@ -58,10 +59,23 @@ public class Cache extends CordovaPlugin {
 				public void run() {
 					try {
 						// clear the cache
-						self.webView.clearCache(true);
+						self.webView.clearCache();
+						CookieManager cookieManager = CookieManager.getInstance();
+						//cookieManager.removeAllCookies(null);
+						//cookieManager.flush();
+
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+							cookieManager.removeAllCookies(null);
+							cookieManager.removeSessionCookies(null);
+							cookieManager.flush();
+						}else{
+							cookieManager.removeAllCookie();
+							cookieManager.removeSessionCookie();
+							cookieManager.removeExpiredCookie();
+						}
 
 						// clear the data
-						self.clearApplicationData();
+						//self.clearApplicationData();
 
 						// send success result to cordova
 						PluginResult result = new PluginResult(PluginResult.Status.OK);
@@ -90,7 +104,18 @@ public class Cache extends CordovaPlugin {
 				public void run() {
 					try {
 						// clear the cache
-						self.webView.clearCache(true);
+						self.webView.clearCache();
+
+						CookieManager cookieManager = CookieManager.getInstance();
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+							cookieManager.removeAllCookies(null);
+							cookieManager.removeSessionCookies(null);
+							cookieManager.flush();
+						}else{
+							cookieManager.removeAllCookie();
+							cookieManager.removeSessionCookie();
+							cookieManager.removeExpiredCookie();
+						}
 
 						// send success result to cordova
 						PluginResult result = new PluginResult(PluginResult.Status.OK);
@@ -129,7 +154,9 @@ public class Cache extends CordovaPlugin {
 		if (appDir.exists()) {
 			String[] children = appDir.list();
 			for (String s : children) {
-				if (!s.equals("lib")) {
+				if(s.equals("lib")){
+					Log.i(LOG_TAG, "Ignoring File /data/data/APP_PACKAGE/" + s);
+				}else{
 					deleteDir(new File(appDir, s));
 					Log.i(LOG_TAG, "File /data/data/APP_PACKAGE/" + s + " DELETED");
 				}
